@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "82399903466",
+    "project_id": "communitymanagementsyste-b8d42",
+    "storage_bucket": "communitymanagementsyste-b8d42.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82399903466:android:231595b1d8040c9c882193",
+        "android_client_info": {
+          "package_name": "com.evmak.communitymanagementsystem.community_management_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM6BRhSxHICQ5P85jJH3XZ19xG8xzzb5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
