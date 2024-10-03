@@ -42,7 +42,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
             CircleAvatar(
               radius: 50,
               backgroundColor: Colors.orangeAccent.withOpacity(0.2),
-              child: Icon(Icons.group_add, color: Colors.orangeAccent, size: 50),
+              child: const Icon(Icons.group_add, color: Colors.orangeAccent, size: 50),
             ),
             const SizedBox(height: 40),
             const TextField(

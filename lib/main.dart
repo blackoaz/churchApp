@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'blocs/authorizationBloc.dart';
 import 'blocs/groupsBloc.dart';
+import 'blocs/paymentBloc.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<AuthorizationBloc>.value(value: AuthorizationBloc()),
           ChangeNotifierProvider<GroupsBloc>.value(value: GroupsBloc()),
+          ChangeNotifierProvider<PaymentBloc>.value(value: PaymentBloc(),)
       ],
       child: MaterialApp(
         title: 'Community Meetup',

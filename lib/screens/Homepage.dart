@@ -59,9 +59,39 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
             ),
+            // User Profile Section
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 40, // Circle Avatar with radius 40
+                    backgroundImage: AssetImage('images/profile_pic.jpeg'), // Your profile image asset
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'John Doe', // Example user name
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    '+123 456 7890', // Example phone number
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(), // Optional divider
+            // Logout Section
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.white),
-              title: const Text('Logout', style: TextStyle(color: Colors.white)),
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text('Logout', style: TextStyle(color: Colors.red)),
               onTap: () async {
                 try {
                   Navigator.pop(context);

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../blocs/authorizationBloc.dart';
 import 'Homepage.dart';
+import 'drawer_file.dart';
 
 class Topics extends StatefulWidget {
   const Topics({super.key});
@@ -76,74 +77,10 @@ class _TopicsState extends State<Topics> {
         title: const Text("Topics"),
         centerTitle: true,
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         backgroundColor: Colors.orangeAccent,
         elevation: 2,
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Center(
-                child: Container(
-                  height: 120,
-                  width: 150,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    image: DecorationImage(
-                      image: AssetImage('images/community_logo.jpeg'),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.white),
-              title: const Text('Logout', style: TextStyle(color: Colors.white)),
-              onTap: () async {
-                try {
-                  Navigator.pop(context);
-                  authorizationBloc.alertDialogPleaseWait(
-                      context);
-
-                  // Call the logout function and handle the result
-                  Map<String, dynamic> results =
-                  await authorizationBloc.logoutUser();
-
-                  // Close the progress dialog
-                  Navigator.of(context).pop();
-
-                  if (results['success']) {
-                    // Navigate to HomeScreen if logout is successful
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Homepage(),
-                        ),
-                            (Route<dynamic> route) => false);
-                  } else {
-                    // Display an error message if logout fails
-                    int statusCode = results['status_code'] ?? 100;
-                    authorizationBloc.alertDialogShowError(
-                      context,
-                      results['message'].toString(),
-                      is401: statusCode == 401,
-                    );
-                  }
-                } catch (e) {
-                  Navigator.of(context).pop();
-                  authorizationBloc.alertDialogShowError(
-                      context,
-                      'An error occurred during logout. Please try again.',
-                      is401: false);
-                }
-              },
-            ),
-          ],
-
-        ),
+        child: CustomDrawerList(),
       ),
       body: SingleChildScrollView(
         child: Padding(

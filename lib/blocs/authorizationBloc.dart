@@ -20,11 +20,14 @@ class AuthorizationBloc extends ChangeNotifier {
   String _otp = "";
   late int _resendToken;
   String _authKey = "";
+  String _community = "";
 
   // registration credentials
   String get fullName => _fullName;
 
   String get email => _email;
+
+  String get community => _community;
 
   String get phoneNumber => _phoneNumber;
 
@@ -52,6 +55,12 @@ class AuthorizationBloc extends ChangeNotifier {
 
   set email(String value) {
     _email = value;
+    notifyListeners();
+  }
+
+
+  set community(String value) {
+    _community= value;
     notifyListeners();
   }
 
@@ -135,7 +144,7 @@ class AuthorizationBloc extends ChangeNotifier {
   }
 
   setSignUpDetails(String full_name, String Regemail, String phone_number,
-      String username, String password, String c_password)
+      String username, String password, String c_password,String communityId)
   {
     fullName = full_name;
     email = Regemail;
@@ -143,12 +152,15 @@ class AuthorizationBloc extends ChangeNotifier {
     usernameReg = username;
     passwordReg = password;
     confirmPassword = c_password;
+    community = communityId;
 
   }
 
   Future<Map<String, dynamic>> registerUserToServer() async {
     getDataBase();
-    var url = Uri.parse('https://evmak.com/church/public/api/v1/register-user');
+    String community1 = community;
+    print("Inside register community is: $community1",);
+    var url = Uri.parse('https://evmak.com/church/public/api/v1/register');
     try {
       var response = await http.post(
         url,
@@ -157,6 +169,7 @@ class AuthorizationBloc extends ChangeNotifier {
           "email": email,
           "phone_no": phoneNumber,
           "role_id": 2,
+          "community_id":community,
           "username": usernameReg,
           "password": passwordReg,
           "c_password": confirmPassword
@@ -203,20 +216,12 @@ class AuthorizationBloc extends ChangeNotifier {
           "message":data['message']
         };
       }
-      } else if (response.statusCode == 400 || response.statusCode == 403 || response.statusCode == 422) {
+      } else if (response.statusCode >= 400 && response.statusCode <= 422) {
         Map<String, dynamic > data = json.decode(response.body);
         print("ResponseBody: $data");
         return {
           "success": false,
           "message":  data['message']
-        };
-      } else if (response.statusCode == 401) {
-        Map<String, dynamic > data = json.decode(response.body);
-        print("ResponseBody: $data");
-        // server error
-        return {
-          "success": false,
-          "message": "You are not authorized to perform this action"
         };
       } else if (response.statusCode == 500) {
         Map<String, dynamic > data = json.decode(response.body);
@@ -240,7 +245,7 @@ class AuthorizationBloc extends ChangeNotifier {
     } on Error catch (error) {
       return {
         "success": false,
-        "message": "Error, could not connect to the server"
+        "message": "Error, could not connect to the server: $error"
       };
     }
   }
@@ -270,13 +275,12 @@ class AuthorizationBloc extends ChangeNotifier {
           await db.transaction((txn) async {
             int id = await txn.rawInsert('INSERT INTO Token(key) VALUES(?)',
                 [data['data']['token']]);
-            print('row inserted: $id');
           });
         } else {
           // update user token
           int count = await db.rawUpdate('UPDATE Token SET key = ?',
               [authKey]); // this table will always contain one record only
-          print('row updated: $count');
+
         }
 
         return {
@@ -341,7 +345,6 @@ class AuthorizationBloc extends ChangeNotifier {
       print("The status code ${response.statusCode}");
       print("The responseBody ${response.body}");
       if(response.statusCode == 200){
-        var data1 = json.decode(response.body);
         Map<String, dynamic > data = json.decode(response.body);
         // logout Firebase user
         FirebaseAuth auth = FirebaseAuth.instance;
@@ -356,14 +359,14 @@ class AuthorizationBloc extends ChangeNotifier {
       }else if (response.statusCode == 400) {
         Map<String, dynamic > data = json.decode(response.body);
         return {
-          "success": data["success"],
-          "message": data["message"]
+          "success": false,
+          "message": []
         };
       } else if (response.statusCode == 401 || response.statusCode == 403) {
         // Unauthorized or Forbidden
         //token is no longer valid // delete the token
         int delete = await db.rawDelete('DELETE FROM Token');
-        // server error
+
         return {
           "success": false,
           "message": "You are not authorized to perform this action",
